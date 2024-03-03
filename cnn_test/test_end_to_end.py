@@ -6,7 +6,7 @@ from finalProject.cnn_modules.cnn_modules import Cnn
 @pytest.fixture(scope="module")
 def page():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(headless=False)
         page = browser.new_page()
         yield page
         browser.close()
@@ -24,7 +24,7 @@ def test_end_to_end_cnn(page):
     # 3. Enter valid data into "Email address" field
     # 4. Enter valid data into "Password" field
     # 5. Press "Sign In" button
-    cnn.log_in("cnntestmail@gmail.com", "cnntestmail1?")
+    cnn.log_in("cnntestmailsecond@gmail.com", "cnntestmailsecond1?")
     page.wait_for_timeout(5000)
     assert page.url == "https://www.cnn.com/account/log-in"
     cnn.log_in_sign_in()
@@ -67,9 +67,9 @@ def test_end_to_end_cnn(page):
     # 20. Enter "Ukraine" in search field
     # 21. Press "Enter"
     # 22. Go back to main page by clicking on CNN icon
-    cnn.cnn_search_ukraine()
-    page.wait_for_load_state("load")
-    assert page.url == "https://www.cnn.com/search?q=Ukraine"
+    cnn.cnn_search("Ukraine")
+    page.wait_for_timeout(5000)
+    assert page.url == "https://www.cnn.com/search?q=Ukraine&from=0&size=10&page=1&sort=newest&types=all&section="
     cnn.cnn_logo()
     assert page.url == "https://www.cnn.com/"
     page.wait_for_timeout(2000)

@@ -104,11 +104,11 @@ class Cnn:
         self.cnn_watch()
         self.cnn_watch_play()
 
-    def cnn_search_ukraine(self):
+    def cnn_search(self, in_put):
         """Search for 'Ukraine' news."""
         self.page.get_by_label("Search Icon").click()
         self.page.locator("#pageHeader").get_by_placeholder("Search CNN...").click()
-        self.page.locator("#pageHeader").get_by_placeholder("Search CNN...").fill("Ukraine")
+        self.page.locator("#pageHeader").get_by_placeholder("Search CNN...").fill(in_put)
         self.page.locator("#pageHeader").get_by_placeholder("Search CNN...").press("Enter")
 
     def cnn_log_out(self):

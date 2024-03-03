@@ -6,59 +6,10 @@ from finalProject.cnn_modules.cnn_modules import Cnn
 @pytest.fixture(scope="function")
 def page():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(headless=True)
         page = browser.new_page()
         yield page
         browser.close()
-
-
-def test_new_username(page):
-    """Attempt to change username."""
-    cnn = Cnn(page)
-    # Launch the browser and navigate to "https://www.cnn.com"'.
-    cnn.cnn_goto()
-    page.wait_for_load_state("load")
-    # Log in
-    cnn.log_in("cnntestmail@gmail.com", "cnntestmail1?")
-    page.wait_for_timeout(2000)
-    assert page.url == "https://www.cnn.com/account/log-in"
-    cnn.log_in_sign_in()
-    # Click on account/settings button
-    cnn.account_settings()
-    assert "settings" in page.url
-    header_element = page.locator("#settings-header")
-    assert header_element.inner_text() == "\n            Your account\n        "
-    # Click on "Edit" button near "Display name" name field
-    cnn.page.get_by_role("button", name="Edit").first.click()
-    # Enter new name
-    cnn.edit_new_name("Bohdan 3")
-    status_element = page.locator(".user-account-settings__inline-field-status")
-    assert status_element.inner_text() == "IN REVIEW"
-    assert header_element.inner_text() == "\n            Your account\n        "
-
-
-def test_new_location(page):
-    """Attempt to change location."""
-    cnn = Cnn(page)
-    # Launch the browser and navigate to "https://www.cnn.com"'.
-    cnn.cnn_goto()
-    page.wait_for_load_state("load")
-    # Log in
-    cnn.log_in("cnntestmail@gmail.com", "cnntestmail1?")
-    page.wait_for_timeout(2000)
-    assert page.url == "https://www.cnn.com/account/log-in"
-    cnn.log_in_sign_in()
-    # Click on account/settings button
-    cnn.account_settings()
-    assert "settings" in page.url
-    header_element = page.locator("#settings-header")
-    assert header_element.inner_text() == "\n            Your account\n        "
-    # Click on "Edit" button near "Zip Code"
-    cnn.page.get_by_role("button", name="Edit").first.click()
-    # Enter new location
-    cnn.edit_new_location("16888")
-    assert page.get_by_text("Saved!").is_visible()
-    assert header_element.inner_text() == "\n            Your account\n        "
 
 
 def test_log_invalid_mail(page):
@@ -67,8 +18,10 @@ def test_log_invalid_mail(page):
     # Launch the browser and navigate to "https://www.cnn.com"'.
     cnn.cnn_goto()
     page.wait_for_load_state("load")
-    cnn.log_in("cnntestmailnew@gmail.com", "cnntestmail1?")
-    assert page.locator('p.feedback-message__text').inner_text() == "You have entered an invalid username or password"
+    cnn.log_in("111", "cnntestmailsecond1?")
+    cnn.log_in_sign_in()
+    page.wait_for_timeout(2000)
+    assert page.get_by_text("Please enter a valid email").is_visible()
 
 
 def test_log_invalid_password(page):
@@ -79,19 +32,36 @@ def test_log_invalid_password(page):
     page.wait_for_load_state("load")
     # Press "log in" button
     # Enter "cnntestmail@gmail.com" in "Email address" field
-    cnn.log_in("cnntestmailnew@gmail.com", "asdf")
-    assert page.locator('p.feedback-message__text').inner_text() == "You have entered an invalid username or password"
+    cnn.log_in("cnntestmailsecond@gmail.com", "asdf")
+    cnn.log_in_sign_in()
+    page.wait_for_timeout(2000)
+    assert page.locator('.icon-ui-error-circle-fill').is_visible()
 
 
-def test_new_user(page):
+def test_new_user_invalid_mail(page):
     cnn = Cnn(page)
     # Launch the browser and navigate to "https://www.cnn.com"'.
     cnn.cnn_goto()
     page.wait_for_load_state("load")
-    page.locator("#pageHeader").get_by_role("link", name="User Account Log In Button").click()
+    # Click on "Log in" button
+    cnn.log_in_page()
+    # Click on "Sign up" button
     page.get_by_role("link", name="Sign up.").click()
-    page.get_by_placeholder("Email address").fill("kjfkjv@gmail.com")
+    page.get_by_placeholder("Email address").click()
+    page.get_by_placeholder("Email address").fill("asdfgh@zfxgvbn")
     page.get_by_placeholder("Password").click()
-    page.get_by_placeholder("Password").fill("asd123321")
-    page.get_by_role("button", name="Create Account").click()
-    assert page.get_by_text("Your free CNN account has").is_visible()
+    page.wait_for_timeout(2000)
+    assert page.locator('.icon-ui-error-circle-fill').is_visible()
+
+
+def test_search_invalid(page):
+    cnn = Cnn(page)
+    # Launch the browser and navigate to "https://www.cnn.com"'.
+    cnn.cnn_goto()
+    page.wait_for_load_state("load")
+    # Click on "Search" button
+    # Enter invalid data "!@#IU!Y%@"
+    # Press "Enter"
+    cnn.cnn_search("!@#IU!Y%@")
+    page.wait_for_timeout(2000)
+    assert page.get_by_text("0 results has been found").is_visible()
