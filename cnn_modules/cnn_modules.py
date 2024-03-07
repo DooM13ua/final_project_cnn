@@ -5,15 +5,16 @@ class Cnn:
     def cnn_goto(self):
         """Go to http://www.cnn.com."""
         url = "https://www.cnn.com/"
-        self.page.goto(url)
+        self.page.goto(url, timeout=60000)
 
     def assert_logo(self):
         """Check if page header 'CNN logo' present."""
-        assert self.page.locator("#pageheader").get_by_role("link", name="CNN logo")
+        assert (self.page.locator("#pageheader").
+                get_by_role("link", name="CNN logo"))
 
     def log_in_page(self):
         """Go to 'Log in' page"""
-        self.page.locator("#pageHeader").get_by_role("link", name="User Account Log In Button").click()
+        (self.page.locator("#pageHeader").get_by_role("link", name="User Account Log In Button").click())
 
     def log_in_mail(self, log_in):
         """Enter log in data into 'Email address' field."""
@@ -31,7 +32,8 @@ class Cnn:
 
     def header_world(self):
         """Click on 'World' section."""
-        self.page.locator("#pageHeader").get_by_role("link", name="World").click()
+        (self.page.locator("#pageHeader").
+         get_by_role("link", name="World").click())
 
     def header_menu(self):
         """Click on 'Menu' section."""
@@ -43,11 +45,13 @@ class Cnn:
 
     def russ_invasion(self):
         """Click on 'Russian invasion of Ukraine' article."""
-        self.page.get_by_role("link", name="Russian invasion of Ukraine:").click()
+        (self.page.get_by_role("link", name="Russian invasion of Ukraine:").
+         click())
 
     def cnn_logo(self):
         """Click on 'CNN logo' button."""
-        self.page.locator("#pageHeader").get_by_role("link", name="CNN logo").click()
+        (self.page.locator("#pageHeader").
+         get_by_role("link", name="CNN logo").click())
 
     def cnn_logo_listen(self):
         """Click on 'CNN' button."""
@@ -55,15 +59,18 @@ class Cnn:
 
     def cnn_logo_watch(self):
         """Click on 'CNN' button."""
-        self.page.locator("#header-nav-container").get_by_label("CNN", exact=True).click()
+        (self.page.locator("#header-nav-container").
+         get_by_label("CNN", exact=True).click())
 
     def cnn_listen(self):
         """Go to CNN 'Listen'."""
-        self.page.locator("#pageHeader").get_by_role("link", name="Listen").click()
+        (self.page.locator("#pageHeader").
+         get_by_role("link", name="Listen").click())
 
     def cnn_watch(self):
         """Go to CNN 'Watch'."""
-        self.page.locator("#pageHeader").get_by_role("link", name="Watch").click()
+        (self.page.locator("#pageHeader").
+         get_by_role("link", name="Watch").click())
 
     def cnn_listen_play(self):
         """Click on play button at CNN 'Listen'."""
@@ -79,7 +86,8 @@ class Cnn:
 
     def cnn_account_button(self):
         """Click on 'account' button."""
-        self.page.locator("#pageHeader").get_by_role("button", name="User Account Nav Button").click()
+        (self.page.locator("#pageHeader").
+         get_by_role("button", name="User Account Nav Button").click())
 
     def log_in(self, log_in, password):
         """Full log in process for end-to-end testing."""
@@ -107,9 +115,12 @@ class Cnn:
     def cnn_search(self, in_put):
         """Search for 'Ukraine' news."""
         self.page.get_by_label("Search Icon").click()
-        self.page.locator("#pageHeader").get_by_placeholder("Search CNN...").click()
-        self.page.locator("#pageHeader").get_by_placeholder("Search CNN...").fill(in_put)
-        self.page.locator("#pageHeader").get_by_placeholder("Search CNN...").press("Enter")
+        (self.page.locator("#pageHeader").
+         get_by_placeholder("Search CNN...").click())
+        (self.page.locator("#pageHeader").
+         get_by_placeholder("Search CNN...").fill(in_put))
+        (self.page.locator("#pageHeader").
+         get_by_placeholder("Search CNN...").press("Enter"))
 
     def cnn_log_out(self):
         """Log out form cnn.com."""
@@ -130,7 +141,9 @@ class Cnn:
         self.page.get_by_role("button", name="Go to settings").click()
 
     def edit_new_location(self, new_location):
-        self.page.get_by_role("main").locator("section").filter(has_text="Location Manage your location").get_by_role("button").click()
+        (self.page.get_by_role("main").locator("section").
+         filter(has_text="Location Manage your location").
+         get_by_role("button").click())
         self.page.get_by_placeholder("optional").click()
         self.page.get_by_placeholder("optional").fill(new_location)
         self.page.get_by_placeholder("optional").press("Enter")
